@@ -1,0 +1,114 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { loadClinics, type Clinic } from '../../lib/dataLoader';
+import {
+	Card,
+	CardContent,
+	CardDescription, // Potentially use for address/category
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+
+// Function to create a simple slug (must be consistent with index page)
+function slugify(text: string): string {
+    if (!text) return '';
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-');
+}
+
+export async function getStaticPaths() {
+    // Define slugify directly inside getStaticPaths for testing scope
+    function slugifyForPaths(text: string): string {
+        if (!text) return '';
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-');
+    }
+
+    const clinics = loadClinics();
+    const uniqueCategories = [
+        ...new Set(clinics.map(clinic => clinic.mainCategory).filter(Boolean) as string[])
+    ];
+
+    return uniqueCategories.map(category => ({
+        params: { category: slugifyForPaths(category) },
+        props: { categoryName: category },
+    }));
+}
+
+const { categoryName } = Astro.props;
+const allClinics = loadClinics();
+const categoryClinics = allClinics.filter(clinic => clinic.mainCategory === categoryName);
+const pageTitle = `${categoryName} - English Friendly Korea`;
+---
+
+<Layout title={pageTitle}>
+    <div class="container">
+        <main>
+            <a href="/">&larr; Back to Home</a>
+            <h1>{categoryName}</h1>
+            <p>Showing {categoryClinics.length} listings in this category.</p>
+
+            {categoryClinics.length > 0 ? (
+                <ul class="listings-grid"> {/* Reusing class from homepage for grid */} 
+                    {categoryClinics.map(clinic => (
+                        <li> {/* Grid item */} 
+                            <Card className="flex flex-col h-full">
+                                <CardHeader>
+                                    <CardTitle>{clinic.name}</CardTitle>
+                                    {/* Maybe use CardDescription for address? Or keep in content */}
+                                    {clinic.location_address && <CardDescription>{clinic.location_address}</CardDescription>}
+                                </CardHeader>
+                                <CardContent className="flex-grow text-sm text-muted-foreground">
+                                    {/* Or put address here */} 
+                                    {/* <p>{clinic.location_address}</p> */} 
+                                    {clinic.description && <p>{clinic.description.substring(0, 120)}...</p>}
+                                </CardContent>
+                                <CardFooter>
+                                    <Button asChild size="sm" className="w-full sm:w-auto">
+                                        <a href={`/listing/${slugify(clinic.name)}/`}>View Details</a>
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No listings found in this category.</p>
+            )}
+        </main>
+    </div>
+</Layout>
+
+<style>
+    /* Grid styles for category listings */
+    .listings-grid {
+		list-style: none;
+		padding: 0;
+		margin: 2em 0 0 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5em;
+	}
+
+    /* Responsive adjustments could be added here if needed, 
+       or rely on the auto-fit behavior of the grid. 
+       Example: Adjust gap or minmax on smaller screens */
+    /* @media (max-width: 600px) {
+        .listings-grid {
+            grid-template-columns: 1fr;
+            gap: 1em;
+        }
+    } */
+</style> 

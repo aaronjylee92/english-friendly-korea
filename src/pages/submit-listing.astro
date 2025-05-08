@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NewListingForm from '@/components/NewListingForm.tsx';
+
+const pageTitle = "Submit a New Listing - English Friendly Korea";
+---
+
+<Layout title={pageTitle}>
+  <div class="container py-8">
+    <header class="mb-12 text-center">
+      <h1 class="text-4xl font-bold">Share a New English-Friendly Place</h1>
+      <p class="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+        Help our community grow! If you know of a business, service, or clinic in South Korea that is particularly welcoming to English speakers, please share the details below. Your contributions make this resource better for everyone.
+      </p>
+    </header>
+
+    <section id="submission-form-section">
+      <NewListingForm client:load />
+    </section>
+
+    <section class="mt-12 text-center text-sm text-muted-foreground">
+      <p>
+        All submissions will be reviewed by our team before being published. We may contact you via the email you provide if we have any questions. Thank you for helping build English Friendly Korea!
+      </p>
+    </section>
+
+  </div>
+</Layout> 

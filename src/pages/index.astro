@@ -1,11 +1,271 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { loadClinics, type Clinic } from '../lib/dataLoader';
+import { Button } from '@/components/ui/button';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import FAQAccordion from '@/components/FAQAccordion.tsx';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const clinics: Clinic[] = loadClinics();
+const pageTitle = "English Friendly Korea";
+const totalClinics = clinics.length;
+
+// Get the first 9 clinics as featured
+const featuredClinics = clinics.slice(0, 9);
+
+// Function to create a simple slug (used in frontmatter for category links)
+function slugify(text: string): string {
+	if (!text) return '';
+	return text
+		.toString()
+		.toLowerCase()
+		.trim()
+		.replace(/\s+/g, '-')       // Replace spaces with -
+		.replace(/[^\w\-]+/g, '')   // Remove all non-word chars
+		.replace(/\-\-+/g, '-');      // Replace multiple - with single -
+}
+
+// Get unique main categories
+const categories = [
+	...new Set(clinics.map(clinic => clinic.mainCategory).filter(Boolean) as string[])
+].sort();
+
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={pageTitle}>
+	<div class="container">
+		<main>
+			<section class="hero-section">
+				<h1>
+					{totalClinics.toLocaleString()} English-friendly businesses curated to help foreigners navigate South Korea.
+				</h1>
+				<p class="subheading">
+					Find trusted doctors, dentists, services, and more – reviewed and recommended for the international community.
+				</p>
+			</section>
+
+			{/* Search container removed from here */}
+			{/* Search results container removed from here */}
+
+			{/* Removed the original h2 here */}
+			{categories.length > 0 ? (
+				<div class="category-section">
+					<h2>Categories</h2>
+					<ul class="category-grid-list">
+						{categories.map(category => (
+							<li>
+								<Button asChild variant="outline">
+									<a href={`/category/${slugify(category)}/`}>{category}</a>
+								</Button>
+							</li>
+						))}
+					</ul>
+				</div>
+			) : (
+				<p>No categories found.</p>
+			)}
+
+			<section class="featured-listings">
+				<h2>Featured Listings</h2>
+				<ul class="listings-grid">
+					{featuredClinics.map(clinic => (
+						<li>
+							<Card className="flex flex-col h-full">
+								<CardHeader>
+									<CardTitle>{clinic.name}</CardTitle>
+									{clinic.mainCategory && <CardDescription>{clinic.mainCategory}</CardDescription>}
+								</CardHeader>
+								<CardContent className="flex-grow">
+									{clinic.location_address && <p className="text-sm text-muted-foreground">{clinic.location_address}</p>}
+								</CardContent>
+								<CardFooter>
+									<Button asChild size="sm" className="w-full sm:w-auto">
+										<a href={`/listing/${slugify(clinic.name)}/`}>View Details</a>
+									</Button>
+								</CardFooter>
+							</Card>
+						</li>
+					))}
+				</ul>
+			</section>
+
+			<section class="faq-section mt-12 py-8 border-t border-border">
+				<h2 class="text-2xl font-semibold text-center mb-8">Frequently Asked Questions</h2>
+				<FAQAccordion client:load />
+			</section>
+
+		</main>
+	</div>
 </Layout>
+
+<style>
+	/* Hero Section Styles */
+	.hero-section {
+		text-align: center;
+		padding: calc(var(--spacing-unit, 1rem) * 3) 0;
+	}
+
+	.hero-section h1 {
+		font-size: clamp(1.75rem, 5vw, 2.75rem);
+		font-weight: 700;
+		/* color: var(--color-text); Applied via Tailwind/global */
+		line-height: 1.2;
+		margin: 0 auto var(--spacing-unit, 1rem);
+		max-width: 25ch;
+	}
+
+	.hero-section .subheading {
+		font-size: clamp(1rem, 3vw, 1.15rem);
+		color: hsl(var(--muted-foreground)); /* Use shadcn variable */
+		line-height: 1.6;
+		margin: 0 auto calc(var(--spacing-unit, 1rem) * 2);
+		max-width: 50ch;
+	}
+
+	/* Category Buttons Styling */
+	.category-section h2 {
+		text-align: center;
+		margin-bottom: 1.5em;
+		font-size: 1.75rem; /* Match global h2 or adjust */
+		font-weight: 600; /* Tailwind equivalent: font-semibold */
+		/* color: var(--color-text); Applied via Tailwind/global */
+	}
+
+	/* Flex layout for category buttons */
+	ul.category-grid-list {
+		list-style: none;
+		padding: 0;
+		margin: 2em 0 3em 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.75em; /* Reduced gap slightly */
+	}
+
+	/* Featured Listings Styles */
+	.featured-listings {
+		margin-top: 3em;
+		padding-top: 2em;
+		border-top: 1px solid hsl(var(--border));
+	}
+
+	.featured-listings h2 {
+		text-align: center;
+		margin-bottom: 1.5em;
+		font-size: 1.75rem; /* Match global h2 or adjust */
+		font-weight: 600;
+		/* color: var(--color-primary); Inherited/Applied via Tailwind */
+	}
+
+	/* Grid layout for featured cards */
+	.listings-grid {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5em;
+	}
+
+	/* Responsive adjustments for the grid */
+	@media (max-width: 900px) {
+		.listings-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 600px) {
+		.listings-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<script define:vars={{ allClinics: clinics }}>
+	// Search script is still here but the elements it targets (#search-input, #search-results-container) are gone.
+	// It won't run correctly until search is potentially reintegrated elsewhere.
+	// Define slugify function again directly in the client-side script for client-side use
+	function slugify(text) {
+		if (!text) return '';
+		return text
+			.toString()
+			.toLowerCase()
+			.trim()
+			.replace(/\s+/g, '-')
+			.replace(/[^\w\-]+/g, '')
+			.replace(/\-\-+/g, '-');
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const searchInput = document.getElementById('search-input');
+		const searchResultsContainer = document.getElementById('search-results-container');
+
+		if (!searchInput || !searchResultsContainer) {
+			console.error('Search input or results container not found');
+			return;
+		}
+
+		function renderResults(results, container) {
+			container.innerHTML = ''; // Clear previous results
+
+			if (results.length === 0) {
+				container.innerHTML = '<p>No results found.</p>';
+				return;
+			}
+
+			const ul = document.createElement('ul');
+			ul.className = 'search-results-list';
+
+			results.forEach(clinic => {
+				const li = document.createElement('li');
+				const link = document.createElement('a');
+				link.href = `/listing/${slugify(clinic.name)}/`; // Now uses the client-side slugify
+				link.textContent = clinic.name;
+				li.appendChild(link);
+
+				if(clinic.mainCategory) {
+					const categorySpan = document.createElement('span');
+					categorySpan.className = 'category-hint';
+					categorySpan.textContent = `(${clinic.mainCategory})`;
+					li.appendChild(categorySpan);
+				}
+				ul.appendChild(li);
+			});
+			container.appendChild(ul);
+		}
+
+		searchInput.addEventListener('input', (event) => {
+			const searchTerm = event.target.value.toLowerCase().trim();
+
+			if (!searchTerm) {
+				searchResultsContainer.innerHTML = ''; 
+				return;
+			}
+
+			const filteredClinics = allClinics.filter(clinic => {
+				const nameMatch = clinic.name?.toLowerCase().includes(searchTerm);
+				const categoryMatch = clinic.categories?.toLowerCase().includes(searchTerm);
+				const tagsMatch = clinic.tags?.toLowerCase().includes(searchTerm);
+				const addressMatch = clinic.location_address?.toLowerCase().includes(searchTerm);
+				const descriptionMatch = clinic.description?.toLowerCase().includes(searchTerm);
+				
+				return nameMatch || categoryMatch || tagsMatch || addressMatch || descriptionMatch;
+			});
+
+			renderResults(filteredClinics, searchResultsContainer);
+		});
+	});
+
+	/* 
+	// Old stub - fully implemented above now
+	function renderResults(results, container) {
+		// ...
+	}
+	*/
+</script>

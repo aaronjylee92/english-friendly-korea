@@ -1,0 +1,164 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { loadClinics, type Clinic } from '../../lib/dataLoader';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+
+// Function to create a simple slug (must be consistent, used in template)
+function slugify(text: string): string {
+    if (!text) return '';
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-');
+}
+
+export async function getStaticPaths() {
+    // Define slugify directly inside getStaticPaths for testing scope
+    function slugifyForPaths(text: string): string {
+        if (!text) return '';
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-');
+    }
+
+    const clinics = loadClinics();
+
+    const paths = clinics.map(clinic => ({
+        params: { slug: slugifyForPaths(clinic.name) }, // Use local slugifyForPaths
+        props: { clinic },
+    }));
+
+    return paths;
+}
+
+interface Props {
+    clinic: Clinic;
+}
+
+const { clinic } = Astro.props;
+
+const pageTitle = `${clinic.name} - English Friendly Korea`;
+// The original slugify is still used here for the category link in the template
+const categorySlug = clinic.mainCategory ? slugify(clinic.mainCategory) : null;
+
+// Prepare for Google Maps Embed
+const googleMapsApiKey = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY;
+let mapQuery = null;
+if (clinic.location_latitude && clinic.location_longitude) {
+    mapQuery = `${clinic.location_latitude},${clinic.location_longitude}`;
+} else if (clinic.location_address) {
+    mapQuery = clinic.location_address;
+}
+
+const mapEmbedUrl = mapQuery && googleMapsApiKey ? `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${encodeURIComponent(mapQuery)}` : null;
+
+---
+
+<Layout title={pageTitle}>
+    <div class="container py-8">
+        <main>
+            <nav class="mb-6 text-sm text-muted-foreground">
+                <a href="/" class="hover:text-primary"> Home </a>
+                {categorySlug && (
+                    <>
+                        <span class="mx-1">/</span>
+                        <a href={`/category/${categorySlug}/`} class="hover:text-primary"> {clinic.mainCategory} </a>
+                    </>
+                )}
+                <span class="mx-1">/</span>
+                <span class="font-medium text-foreground">{clinic.name}</span>
+            </nav>
+
+            <h1 class="text-3xl font-bold tracking-tight mb-4">{clinic.name}</h1>
+
+            <Card className="mb-6">
+                <CardHeader>
+                    <CardTitle>Details</CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-4 sm:grid-cols-2">
+                    {clinic.location_address && (
+                        <div>
+                            <strong class="block text-sm font-medium mb-1">Address</strong>
+                            <p class="text-sm text-muted-foreground">{clinic.location_address}</p>
+                        </div>
+                    )}
+                    {clinic.contact_phone && (
+                        <div>
+                            <strong class="block text-sm font-medium mb-1">Phone</strong>
+                            <p class="text-sm text-muted-foreground">{clinic.contact_phone}</p>
+                        </div>
+                    )}
+                    {clinic.mainLink && (
+                        <div>
+                            <strong class="block text-sm font-medium mb-1">Website</strong>
+                            <a href={clinic.mainLink} target="_blank" rel="noopener noreferrer" class="text-sm text-primary hover:underline">
+                                {clinic.mainLink}
+                            </a>
+                        </div>
+                    )}
+                    {clinic.categories && (
+                         <div>
+                            <strong class="block text-sm font-medium mb-1">Categories</strong>
+                            <p class="text-sm text-muted-foreground">{clinic.categories}</p>
+                        </div>
+                    )}
+                    {clinic.tags && (
+                         <div>
+                            <strong class="block text-sm font-medium mb-1">Tags</strong>
+                            <p class="text-sm text-muted-foreground">{clinic.tags}</p>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+
+            {clinic.description && (
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold mb-3">Description</h2>
+                    <p class="text-muted-foreground leading-relaxed">{clinic.description}</p>
+                </div>
+            )}
+
+            <div class="map-container">
+                <h2 class="text-2xl font-semibold mb-3">Location Map</h2>
+                {mapEmbedUrl ? (
+                    <iframe
+                        class="w-full rounded-md border"
+                        height="450"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src={mapEmbedUrl}>
+                    </iframe>
+                ) : clinic.location_address || (clinic.location_latitude && clinic.location_longitude) ? (
+                    <p class="text-muted-foreground">Map could not be generated. (Missing data or API key issue)</p>
+                ) : (
+                    <p class="text-muted-foreground">No location data available to display map.</p>
+                )}
+            </div>
+        </main>
+    </div>
+</Layout>
+
+<style>
+    /* Remove old custom styles */
+	/* nav { ... } */
+	/* .details-grid { ... } */
+	/* .detail-item { ... } */
+	/* .description-section { ... } */
+	/* .map-container { ... } */
+	/* Specific h1, h2, p styles can likely be removed if covered by Tailwind/global */
+</style> 
