@@ -69,36 +69,48 @@ The project aims to build an online directory of English-friendly services and e
         *   Success Criteria: A new page `/submit-listing` exists with a form for users to input data for a new business. Uses shadcn/ui form components. Navigation link present.
     *   **12.3: Implement Form Submission (Frontend Only):**
         *   Success Criteria: On form submission, data is logged to the console (or displayed on the page) to verify structure. Basic client-side validation implemented.
-*   **Task 13: Add Navigation Links to Layout**
-    *   **13.1: Update Layout with New Page Links:**
-        *   Success Criteria: Links to FAQ, About Us, Contact, and Submit Listing pages are present and functional in the site's main navigation (e.g., header or sidebar) and potentially footer.
+*   **Task 13: Add Navigation Links to Layout** (Layout will be revisited with new UI style)
+    *   **13.1: Update Layout with New Page Links (Will be revisited with new UI style)
 
-**Phase 5: UI Migration to RetroUI**
+**Phase 5: UI Migration to Neo-Brutalism Style**
 
-*   **Task 14: Preparation & Setup for RetroUI**
-    *   **14.1: Research RetroUI Component Equivalents** (Provisionally complete; will confirm during implementation)
-    *   **14.2: Install RetroUI Package:**
-        *   Success Criteria: RetroUI library is successfully installed via npm/pnpm/yarn.
-    *   **14.3: Configure RetroUI:**
-        *   Success Criteria: Review RetroUI documentation for any necessary Tailwind CSS configurations, plugins, or global style imports and apply them.
-    *   **14.4: Plan shadcn/ui Removal:**
-        *   Success Criteria: Identify all shadcn/ui specific files and configurations (`components.json`, `src/lib/utils.ts` if only shadcn related, component files in `src/components/ui/`) for removal at the end of the migration.
-*   **Task 15: Phased Component Replacement with RetroUI**
-    *   **15.1: Update Global Layout & Styles (if needed for RetroUI):**
-        *   Success Criteria: `src/layouts/Layout.astro` and global styles are updated according to RetroUI best practices or requirements.
-    *   **15.2: Replace Button Components:**
-        *   Success Criteria: All instances of shadcn/ui `Button` are replaced with RetroUI button equivalents site-wide. Functionality is preserved.
-    *   **15.3: Replace Card Components:**
-        *   Success Criteria: All instances of shadcn/ui `Card` are replaced with RetroUI card equivalents site-wide. Functionality is preserved.
-    *   **15.4: Replace Accordion Component (FAQ):**
-        *   Success Criteria: The shadcn/ui `Accordion` in `src/components/FAQAccordion.tsx` is replaced with a RetroUI accordion equivalent. Functionality is preserved.
-    *   **15.5: Replace Form Elements (Contact & Submission Forms):**
-        *   Success Criteria: shadcn/ui `Input`, `Textarea`, `Label` in `src/components/ContactForm.tsx` and `src/components/NewListingForm.tsx` are replaced with RetroUI equivalents. Functionality is preserved.
-*   **Task 16: Cleanup & Final Testing**
-    *   **16.1: Remove shadcn/ui Dependencies & Files:**
-        *   Success Criteria: shadcn/ui packages are uninstalled, and related configuration files/components are removed from the project.
-    *   **16.2: Comprehensive Site Testing:**
-        *   Success Criteria: All pages are visually correct, all interactive elements function as expected, and there are no console errors. Site is responsive.
+*   **Task 14 (New): Understand Neo-Brutalism Implementation**
+        *   [x] 14.1: Explore `neo-brutalism` Directory Structure
+        *   [x] 14.2: Identify Key UI Components & Styling Patterns
+        *   [x] 14.3: Analyze Global Styles & Theming
+*   **Task 15 (New): Plan Integration and Component Mapping**
+    *   [x] 15.1: Map Existing Components to Neo-Brutalism Style
+        *   Strategy: Re-style existing components or create new ones (e.g., in `src/components/neo/`) using Tailwind CSS and custom classes (`shadow-brutal`, rotations) derived from the `neo-brutalism` example, rather than a direct library swap.
+    *   [ ] 15.2: Plan Styling Integration
+        *   Success Criteria: Document steps to integrate neo-brutalism global styles (font, custom CSS like `shadow-brutal`, Tailwind config)
+        *   **Integration Steps:**
+            *   **Fonts:** Add `Space Grotesk` font to `src/layouts/Layout.astro` (e.g., via Google Fonts link in `<head>` or by installing a Fontsource package).
+            *   **Tailwind Configuration (`tailwind.config.js`):**
+                *   Merge `fontFamily.sans` to include `Space Grotesk` as the primary sans-serif.
+                *   Add/merge `colors` (e.g., `yellow: { 400: '#FFDD00' }`, `pink: { 400: '#FF88CA' }`) from the example `tailwind.config.js` into our existing config.
+                *   Add/merge `animation` (for `wiggle`) into our existing config.
+            *   **Global CSS (`src/styles/global.css`):**
+                *   Remove current shadcn/ui base styles (variables for dark/light mode if they conflict).
+                *   Add custom CSS classes from `neo-brutalism/src/styles/App.css` (e.g., `shadow-brutal`, rotate utilities, body font-family if not fully handled by Tailwind config).
+                *   Ensure Tailwind base, components, and utilities are imported (`@tailwind base;` etc.).
+            *   **HTML lang attribute:** Ensure `<html>` tag has `lang="en"` (already present).
+            *   **Dark/Light Mode:** The neo-brutalism example doesn't explicitly show a dark/light toggle or separate themes in the files viewed. Our current site defaults to dark mode via `class="dark"` on `<html>`. We need to decide if the neo-brutalism style should have a dark variant or if we adapt it to a single theme (likely light, given the `bg-white` in `Header.tsx` and typical neo-brutalist examples which often use bright backgrounds with black text/shadows). For now, assume we might remove our forced dark mode and adapt to the primary theme shown in the neo-brutalism example.
+*   **Task 16 (New): Phased Implementation of Neo-Brutalism Style**
+    *   **16.1: Apply Global Styles & Update Layout:**
+        *   Success Criteria: Update `src/layouts/Layout.astro` and `src/styles/global.css` (and potentially `tailwind.config.js`) to reflect the neo-brutalism theme (fonts, colors, base styles).
+    *   **16.2: Re-style/Replace Button Components:**
+        *   Success Criteria: All button instances site-wide adopt the neo-brutalism style.
+    *   **16.3: Re-style/Replace Card Components:**
+        *   Success Criteria: All card instances site-wide adopt the neo-brutalism style.
+    *   **16.4: Re-style/Replace Accordion Component (FAQ):**
+        *   Success Criteria: The FAQ accordion on the homepage adopts the neo-brutalism style.
+    *   **16.5: Re-style/Replace Form Elements:**
+        *   Success Criteria: Forms in `ContactForm.tsx` and `NewListingForm.tsx` adopt the neo-brutalism style.
+*   **Task 17 (New): Cleanup and Final Testing**
+    *   **17.1: Remove Old UI Styles/Components:**
+        *   Success Criteria: Conflicting or redundant styles and components from the previous shadcn/ui setup are removed.
+    *   **17.2: Comprehensive Site Testing:**
+        *   Success Criteria: All pages render correctly with the new style, all interactive elements function as expected, and the site is responsive.
 
 ## Project Status Board
 
@@ -136,8 +148,26 @@ The project aims to build an online directory of English-friendly services and e
     *   [x] 12.1: Design Data Structure for New Submissions (Updated with relaxed fields)
     *   [x] 12.2: Create Submission Form Page (Updated with relaxed fields)
     *   [x] 12.3: Implement Form Submission (Frontend Only)
-*   [x] **Task 13: Add Navigation Links to Layout** (Considered complete as layout will be part of RetroUI migration)
-    *   [x] 13.1: Update Layout with New Page Links
+*   [x] **Task 13: Add Navigation Links to Layout** (Layout will be revisited with new UI style)
+    *   [x] 13.1: Update Layout with New Page Links (Will be revisited with new UI style)
+
+**Phase 5: UI Migration to Neo-Brutalism Style**
+*   [x] **Task 14 (New): Understand Neo-Brutalism Implementation**
+    *   [x] 14.1: Explore `neo-brutalism` Directory Structure
+    *   [x] 14.2: Identify Key UI Components & Styling Patterns
+    *   [x] 14.3: Analyze Global Styles & Theming
+*   [ ] **Task 15 (New): Plan Integration and Component Mapping**
+    *   [x] 15.1: Map Existing Components to Neo-Brutalism Style
+    *   [ ] 15.2: Plan Styling Integration
+*   [ ] **Task 16 (New): Phased Implementation of Neo-Brutalism Style**
+    *   [ ] 16.1: Apply Global Styles & Update Layout
+    *   [ ] 16.2: Re-style/Replace Button Components
+    *   [ ] 16.3: Re-style/Replace Card Components
+    *   [ ] 16.4: Re-style/Replace Accordion Component (FAQ)
+    *   [ ] 16.5: Re-style/Replace Form Elements
+*   [ ] **Task 17 (New): Cleanup and Final Testing**
+    *   [ ] 17.1: Remove Old UI Styles/Components
+    *   [ ] 17.2: Comprehensive Site Testing
 
 ## Executor's Feedback or Assistance Requests
 

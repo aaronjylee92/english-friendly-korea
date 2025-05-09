@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
+import { NeoButton } from "@/components/ui/NeoButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -115,7 +115,9 @@ export function NewListingForm() {
       </div>
 
       <div>
-        <Button type="submit" className="w-full sm:w-auto">Submit Listing</Button>
+        <NeoButton type="submit" variant="default" className="w-full sm:w-auto">
+          Submit Listing
+        </NeoButton>
       </div>
     </form>
   );

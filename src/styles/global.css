@@ -1,69 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+/* Removed shadcn/ui CSS variable definitions for :root and .dark */
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    /* Using Slate dark theme variables from shadcn */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
+/* Custom CSS from Neo-brutalism example (neo-brutalism/src/styles/App.css) */
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.5;
+  /* @apply bg-background text-foreground; Ensure these are set appropriately by Tailwind defaults or new theme */
 }
+
+.shadow-brutal {
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.shadow-brutal:hover {
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  transform: translate(-2px, -2px);
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  75% { transform: rotate(-1deg); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.rotate-1 {
+  transform: rotate(1deg);
+}
+
+.rotate-2 {
+  transform: rotate(2deg);
+}
+
+.rotate-3 {
+  transform: rotate(3deg);
+}
+
+.-rotate-1 {
+  transform: rotate(-1deg);
+}
+
+.-rotate-2 {
+  transform: rotate(-2deg);
+}
+
+.-rotate-3 {
+  transform: rotate(-3deg);
+}
+
+section {
+  position: relative;
+  overflow: hidden;
+}
+/* End of custom CSS from Neo-brutalism example */
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border; /* This might need adjustment if --border is no longer defined as expected */
   }
   body {
-    @apply bg-background text-foreground;
+    /* Tailwind will apply default bg/text or from theme if defined. Neo-brutalism example implies light theme. */
+    /* The body font-family is set above directly. */
+     @apply bg-white text-black; /* Explicitly set a base typical of neo-brutalism light themes */
   }
 }

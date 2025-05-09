@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { loadClinics, type Clinic } from '../lib/dataLoader';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button'; // Remove old button import
+import { NeoButton } from '@/components/ui/NeoButton'; // Import NeoButton
 import {
 	Card,
 	CardContent,
@@ -9,7 +10,7 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"; // Keep Card for now, will be replaced later
 import FAQAccordion from '@/components/FAQAccordion.tsx';
 
 const clinics: Clinic[] = loadClinics();
@@ -60,9 +61,9 @@ const categories = [
 					<ul class="category-grid-list">
 						{categories.map(category => (
 							<li>
-								<Button asChild variant="outline">
-									<a href={`/category/${slugify(category)}/`}>{category}</a>
-								</Button>
+								<NeoButton href={`/category/${slugify(category)}/`} variant="outline" className="rotate-1 hover:-rotate-1">
+									{category}
+								</NeoButton>
 							</li>
 						))}
 					</ul>
@@ -85,9 +86,9 @@ const categories = [
 									{clinic.location_address && <p className="text-sm text-muted-foreground">{clinic.location_address}</p>}
 								</CardContent>
 								<CardFooter>
-									<Button asChild size="sm" className="w-full sm:w-auto">
-										<a href={`/listing/${slugify(clinic.name)}/`}>View Details</a>
-									</Button>
+									<NeoButton href={`/listing/${slugify(clinic.name)}/`} variant="default" size="sm" className="w-full sm:w-auto">
+										View Details
+									</NeoButton>
 								</CardFooter>
 							</Card>
 						</li>
