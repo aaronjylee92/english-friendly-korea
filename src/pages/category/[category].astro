@@ -2,13 +2,13 @@
 import Layout from '../../layouts/Layout.astro';
 import { loadClinics, type Clinic } from '../../lib/dataLoader';
 import {
-	Card,
-	CardContent,
-	CardDescription, // Potentially use for address/category
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+	NeoCard,
+	NeoCardContent,
+	NeoCardDescription,
+	NeoCardFooter,
+	NeoCardHeader,
+	NeoCardTitle,
+} from "@/components/ui/NeoCard";
 import { NeoButton } from '@/components/ui/NeoButton';
 
 // Function to create a simple slug (must be consistent with index page)
@@ -64,23 +64,23 @@ const pageTitle = `${categoryName} - English Friendly Korea`;
                 <ul class="listings-grid"> {/* Reusing class from homepage for grid */} 
                     {categoryClinics.map(clinic => (
                         <li> {/* Grid item */} 
-                            <Card className="flex flex-col h-full">
-                                <CardHeader>
-                                    <CardTitle>{clinic.name}</CardTitle>
+                            <NeoCard className="h-full">
+                                <NeoCardHeader>
+                                    <NeoCardTitle>{clinic.name}</NeoCardTitle>
                                     {/* Maybe use CardDescription for address? Or keep in content */}
-                                    {clinic.location_address && <CardDescription>{clinic.location_address}</CardDescription>}
-                                </CardHeader>
-                                <CardContent className="flex-grow text-sm text-muted-foreground">
+                                    {clinic.location_address && <NeoCardDescription>{clinic.location_address}</NeoCardDescription>}
+                                </NeoCardHeader>
+                                <NeoCardContent>
                                     {/* Or put address here */} 
                                     {/* <p>{clinic.location_address}</p> */} 
-                                    {clinic.description && <p>{clinic.description.substring(0, 120)}...</p>}
-                                </CardContent>
-                                <CardFooter>
+                                    {clinic.description && <p className="text-sm text-neutral-700">{clinic.description.substring(0, 120)}...</p>}
+                                </NeoCardContent>
+                                <NeoCardFooter>
                                     <NeoButton href={`/listing/${slugify(clinic.name)}/`} variant="default" className="w-full sm:w-auto">
                                         View Details
                                     </NeoButton>
-                                </CardFooter>
-                            </Card>
+                                </NeoCardFooter>
+                            </NeoCard>
                         </li>
                     ))}
                 </ul>

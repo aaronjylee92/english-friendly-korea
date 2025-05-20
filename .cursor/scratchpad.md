@@ -159,10 +159,10 @@ The project aims to build an online directory of English-friendly services and e
 *   [ ] **Task 15 (New): Plan Integration and Component Mapping**
     *   [x] 15.1: Map Existing Components to Neo-Brutalism Style
     *   [ ] 15.2: Plan Styling Integration
-*   [ ] **Task 16 (New): Phased Implementation of Neo-Brutalism Style**
-    *   [ ] 16.1: Apply Global Styles & Update Layout
-    *   [ ] 16.2: Re-style/Replace Button Components
-    *   [ ] 16.3: Re-style/Replace Card Components
+*   [x] **Task 16 (New): Phased Implementation of Neo-Brutalism Style**
+    *   [x] 16.1: Apply Global Styles & Update Layout
+    *   [x] 16.2: Re-style/Replace Button Components
+    *   [x] 16.3: Re-style/Replace Card Components
     *   [ ] 16.4: Re-style/Replace Accordion Component (FAQ)
     *   [ ] 16.5: Re-style/Replace Form Elements
 *   [ ] **Task 17 (New): Cleanup and Final Testing**

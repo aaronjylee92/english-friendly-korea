@@ -4,13 +4,13 @@ import { loadClinics, type Clinic } from '../lib/dataLoader';
 // import { Button } from '@/components/ui/button'; // Remove old button import
 import { NeoButton } from '@/components/ui/NeoButton'; // Import NeoButton
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card"; // Keep Card for now, will be replaced later
+	NeoCard,
+	NeoCardContent,
+	NeoCardDescription,
+	NeoCardFooter,
+	NeoCardHeader,
+	NeoCardTitle,
+} from "@/components/ui/NeoCard"; // Changed path
 import FAQAccordion from '@/components/FAQAccordion.tsx';
 
 const clinics: Clinic[] = loadClinics();
@@ -77,20 +77,20 @@ const categories = [
 				<ul class="listings-grid">
 					{featuredClinics.map(clinic => (
 						<li>
-							<Card className="flex flex-col h-full">
-								<CardHeader>
-									<CardTitle>{clinic.name}</CardTitle>
-									{clinic.mainCategory && <CardDescription>{clinic.mainCategory}</CardDescription>}
-								</CardHeader>
-								<CardContent className="flex-grow">
-									{clinic.location_address && <p className="text-sm text-muted-foreground">{clinic.location_address}</p>}
-								</CardContent>
-								<CardFooter>
-									<NeoButton href={`/listing/${slugify(clinic.name)}/`} variant="default" size="sm" className="w-full sm:w-auto">
+							<NeoCard className="h-full">
+								<NeoCardHeader>
+									<NeoCardTitle>{clinic.name}</NeoCardTitle>
+									{clinic.mainCategory && <NeoCardDescription>{clinic.mainCategory}</NeoCardDescription>}
+								</NeoCardHeader>
+								<NeoCardContent>
+									{clinic.location_address && <p className="text-sm text-neutral-700">{clinic.location_address}</p>}
+								</NeoCardContent>
+								<NeoCardFooter>
+									<NeoButton href={`/listing/${slugify(clinic.name)}/`} variant="default" className="w-full sm:w-auto">
 										View Details
 									</NeoButton>
-								</CardFooter>
-							</Card>
+								</NeoCardFooter>
+							</NeoCard>
 						</li>
 					))}
 				</ul>
